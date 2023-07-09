@@ -57,7 +57,9 @@ impl Display for LayoutInfo {
                 field.name, 
                 field.offset, 
                 field.layout.size,
-                field.layout.name,
+                format!("{} (align: {})", 
+                    field.layout.name,
+                    field.layout.align,),
             ))?;
         }
         f.write_fmt(format_args!(""))
