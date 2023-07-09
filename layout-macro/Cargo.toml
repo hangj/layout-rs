@@ -1,0 +1,20 @@
+[package]
+name = "layout-macro"
+version = "0.1.0"
+edition = "2021"
+authors = ["hangj <guijie.han@gmail.com>"]
+readme = "README.md"
+license = "MIT"
+description = "view the data layout of a struct"
+repository = "https://github.com/hangj/layout-rs"
+exclude = ["/.github/*", "/.gitattributes", "/appveyor.yml", "/Changelog.md", "/clippy.toml", "/codecov.yml"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+proc-macro = true
+
+[dependencies]
+quote = "1.0.29"
+syn = { version = "2.0.23", features = ["full"] }
+proc-macro2 = "1.0.63"
