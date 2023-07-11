@@ -66,7 +66,10 @@ fn parse_struct(data_struct: &DataStruct, ident: &Ident, ty_generics: &TypeGener
         let field_ident = &field.ident;
         let (field_ident, field_name) = match field_ident {
             Some(ident) => (quote::quote!{ #ident }, Literal::string(&ident.to_string())),
-            None => (quote::quote!{ #i }, Literal::string(&i.to_string())),
+            None => {
+                let num = Literal::i32_unsuffixed(i);
+                (quote::quote!{ #num }, Literal::string(&i.to_string()))
+            },
         };
 
         i += 1;

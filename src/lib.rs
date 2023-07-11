@@ -25,15 +25,7 @@ pub trait Layout {
 
 #[macro_export]
 macro_rules! offset_of_struct {
-    ($struct_name: ty, $field_name: ident) => {
-        {
-            // let p: *const $struct_name = std::ptr::null();
-            let p = 0 as *const $struct_name;
-            unsafe {&(*p).$field_name as *const _ as usize}
-        }
-    };
-
-    ($struct_name: ty, $field_name: literal) => {
+    ($struct_name: ty, $field_name: tt) => {
         {
             // let p: *const $struct_name = std::ptr::null();
             let p = 0 as *const $struct_name;
