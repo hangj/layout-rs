@@ -131,9 +131,9 @@ fn parse_union(data_union: DataUnion, ident: Ident) -> TokenStream2 {
 
         let field_ty = &field.ty;
         let field_tokens = quote::quote! {
-            let mut field = Field::default();
+            let mut field = ::layout_lib::Field::default();
             field.name = #field_name;
-            field.offset = offset_of_struct!(#ident, #field_ident);
+            field.offset = ::layout_lib::offset_of_struct!(#ident, #field_ident);
 
             let mut layout = ::layout_lib::LayoutInfo::default();
             layout.name = std::any::type_name::<#field_ty>();
