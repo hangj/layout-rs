@@ -64,10 +64,11 @@ fn parse_struct(data_struct: &DataStruct, ident: &Ident, ty_generics: &TypeGener
     let mut i = 0;
     for field in punctuated.iter() {
         let field_ident = &field.ident;
-        let field_name = match field_ident{
-            Some(ident) => Literal::string(&ident.to_string()),
-            None => Literal::string(&i.to_string()),
+        let (field_ident, field_name) = match field_ident {
+            Some(ident) => (quote::quote!{ #ident }, Literal::string(&ident.to_string())),
+            None => (quote::quote!{ #i }, Literal::string(&i.to_string())),
         };
+
         i += 1;
 
         let field_ty = &field.ty;

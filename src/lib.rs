@@ -32,6 +32,14 @@ macro_rules! offset_of_struct {
             unsafe {&(*p).$field_name as *const _ as usize}
         }
     };
+
+    ($struct_name: ty, $field_name: literal) => {
+        {
+            // let p: *const $struct_name = std::ptr::null();
+            let p = 0 as *const $struct_name;
+            unsafe {&(*p).$field_name as *const _ as usize}
+        }
+    };
 }
 
 impl Display for LayoutInfo {
