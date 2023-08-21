@@ -12,7 +12,7 @@ exclude = ["/.github/*", "/.gitattributes", "/appveyor.yml", "/Changelog.md", "/
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-layout-macro = { path = "layout-macro" }
+layout-macro = { path = "layout-macro", version = "*" }
 
 [workspace]
 members = [
