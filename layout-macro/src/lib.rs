@@ -55,10 +55,13 @@ fn parse_struct(data_struct: &DataStruct, ident: &Ident, ty_generics: &TypeGener
     };
 
     let mut struct_tokens = quote::quote! {
-        let mut struct_layout = ::layout_lib::LayoutInfo::default();
-        struct_layout.name = std::any::type_name::<#ident #ty_generics>();
-        struct_layout.size = std::mem::size_of::<#ident #ty_generics>();
-        struct_layout.align = std::mem::align_of::<#ident #ty_generics>();
+        let mut struct_layout = ::layout_lib::LayoutInfo::new(
+            std::any::type_name::<#ident #ty_generics>(),
+            // std::any::TypeId::of::<#ident #ty_generics>(),
+            std::mem::size_of::<#ident #ty_generics>(),
+            std::mem::align_of::<#ident #ty_generics>(),
+            Vec::new(),
+        );
     };
 
     let mut i = 0;
@@ -76,15 +79,19 @@ fn parse_struct(data_struct: &DataStruct, ident: &Ident, ty_generics: &TypeGener
 
         let field_ty = &field.ty;
         let field_tokens = quote::quote! {
-            let mut field = ::layout_lib::Field::default();
-            field.name = #field_name;
-            field.offset = ::layout_lib::offset_of_struct!(#ident #ty_generics, #field_ident);
+            let layout = ::layout_lib::LayoutInfo::new(
+                std::any::type_name::<#field_ty>(),
+                // std::any::TypeId::of::<#field_ty>(),
+                std::mem::size_of::<#field_ty>(),
+                std::mem::align_of::<#field_ty>(),
+                Vec::new(),
+            );
 
-            let mut layout = ::layout_lib::LayoutInfo::default();
-            layout.name = std::any::type_name::<#field_ty>();
-            layout.size = std::mem::size_of::<#field_ty>();
-            layout.align = std::mem::align_of::<#field_ty>();
-            field.layout = layout;
+            let field = ::layout_lib::Field {
+                name: #field_name,
+                offset: ::layout_lib::offset_of_struct!(#ident #ty_generics, #field_ident),
+                layout,
+            };
 
             struct_layout.fields.push(field);
         };
@@ -100,10 +107,13 @@ fn parse_struct(data_struct: &DataStruct, ident: &Ident, ty_generics: &TypeGener
 
 fn parse_enum(_data_enum: DataEnum, ident: Ident) -> TokenStream2 {
     let mut struct_tokens = quote::quote! {
-        let mut struct_layout = ::layout_lib::LayoutInfo::default();
-        struct_layout.name = std::any::type_name::<#ident>();
-        struct_layout.size = std::mem::size_of::<#ident>();
-        struct_layout.align = std::mem::align_of::<#ident>();
+        let mut struct_layout = ::layout_lib::LayoutInfo::new(
+            std::any::type_name::<#ident>(),
+            // std::any::TypeId::of::<#ident>(),
+            std::mem::size_of::<#ident>(),
+            std::mem::align_of::<#ident>(),
+            Vec::new(),
+        );
     };
 
     struct_tokens.extend(quote::quote! {
@@ -114,10 +124,13 @@ fn parse_enum(_data_enum: DataEnum, ident: Ident) -> TokenStream2 {
 
 fn parse_union(data_union: DataUnion, ident: Ident) -> TokenStream2 {
     let mut struct_tokens = quote::quote! {
-        let mut struct_layout = ::layout_lib::LayoutInfo::default();
-        struct_layout.name = std::any::type_name::<#ident>();
-        struct_layout.size = std::mem::size_of::<#ident>();
-        struct_layout.align = std::mem::align_of::<#ident>();
+        let mut struct_layout = ::layout_lib::LayoutInfo::new(
+            std::any::type_name::<#ident>(),
+            // std::any::TypeId::of::<#ident>(),
+            std::mem::size_of::<#ident>(),
+            std::mem::align_of::<#ident>(),
+            Vec::new(),
+        );
     };
 
     let mut i = 0;
@@ -131,15 +144,19 @@ fn parse_union(data_union: DataUnion, ident: Ident) -> TokenStream2 {
 
         let field_ty = &field.ty;
         let field_tokens = quote::quote! {
-            let mut field = ::layout_lib::Field::default();
-            field.name = #field_name;
-            field.offset = ::layout_lib::offset_of_struct!(#ident, #field_ident);
+            let layout = ::layout_lib::LayoutInfo::new(
+                std::any::type_name::<#field_ty>(),
+                // std::any::TypeId::of::<#field_ty>(),
+                std::mem::size_of::<#field_ty>(),
+                std::mem::align_of::<#field_ty>(),
+                Vec::new(),
+            );
 
-            let mut layout = ::layout_lib::LayoutInfo::default();
-            layout.name = std::any::type_name::<#field_ty>();
-            layout.size = std::mem::size_of::<#field_ty>();
-            layout.align = std::mem::align_of::<#field_ty>();
-            field.layout = layout;
+            let field = ::layout_lib::Field {
+                name: #field_name,
+                offset: ::layout_lib::offset_of_struct!(#ident, #field_ident),
+                layout,
+            };
 
             struct_layout.fields.push(field);
         };

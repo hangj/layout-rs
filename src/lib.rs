@@ -4,15 +4,30 @@ use std::fmt::Display;
 
 pub use layout_macro::Layout;
 
-#[derive(Debug, Default)]
+#[derive(Debug)]
 pub struct LayoutInfo {
+    /// type name
     pub name: &'static str,
+    // todo: type id
+    // pub id: std::any::TypeId,
     pub size: usize,
     pub align: usize,
     pub fields: Vec<Field>,
 }
 
-#[derive(Debug, Default)]
+impl LayoutInfo {
+    pub fn new(name: &'static str, size: usize, align: usize, fields: Vec<Field>) -> Self {
+        Self {
+            name,
+            // id,
+            size,
+            align,
+            fields
+        }
+    }
+}
+
+#[derive(Debug)]
 pub struct Field {
     pub name: &'static str,
     pub offset: usize,
