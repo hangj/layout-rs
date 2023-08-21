@@ -4,6 +4,10 @@ View the data layout of a struct.
 
 # Usage
 
+```console
+cargo add layout-lib
+```
+
 ```rust
 use layout_lib::Layout;
 
@@ -14,8 +18,19 @@ struct A<T> {
     d: T,
 }
 
+#[repr(C)]
+#[derive(Layout)]
+struct B<T> {
+    b: u8,
+    c: u64,
+    d: T,
+}
+
 fn main() {
     let layout = A::<Vec<i32>>::get_layout();
+    println!("{}", layout);
+
+    let layout = B::<Vec<i32>>::get_layout();
     println!("{}", layout);
 }
 ```
@@ -29,6 +44,14 @@ example::A<alloc::vec::Vec<i32>> (size: 40, align: 8)
 | c        | 0      | 8      | u64 (align: 8) |
 | d        | 8      | 24     | alloc::vec::Vec<i32> (align: 8) |
 | b        | 32     | 1      | u8 (align: 1) |
+
+example::B<alloc::vec::Vec<i32>> (size: 40, align: 8)
+|  field   | offset |  size  |    type    |
+| -------- | ------ | ------ | ---------- |
+| b        | 0      | 1      | u8 (align: 1) |
+| c        | 8      | 8      | u64 (align: 8) |
+| d        | 16     | 24     | alloc::vec::Vec<i32> (align: 8) |
+
 ```
 
 As you can see, the first field of struct A in the layout is *c*, which is not the first declared field(*b*).
